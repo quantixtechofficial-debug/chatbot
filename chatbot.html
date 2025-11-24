@@ -1,6 +1,49 @@
-<input type="text" id="msg" placeholder="Escribe tu mensaje">
-<button onclick="sendMessage()">Enviar</button>
-<div id="reply"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot n8n</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    #chatbox {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #reply {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chatbox">
+  <input type="text" id="msg" placeholder="Escribe tu mensaje">
+  <button onclick="sendMessage()">Enviar</button>
+  <div id="reply"></div>
+</div>
 
 <script>
 async function sendMessage() {
@@ -22,7 +65,6 @@ async function sendMessage() {
 
     const text = await response.text();
 
-    // Si la respuesta está vacía
     if (!text) {
       document.getElementById("reply").innerText = "El servidor no respondió.";
       return;
@@ -33,7 +75,6 @@ async function sendMessage() {
       data = JSON.parse(text);
       document.getElementById("reply").innerText = data.reply || data.response || text;
     } catch (e) {
-      // Si no es JSON válido, lo mostramos tal cual
       document.getElementById("reply").innerText = text;
     }
 
@@ -43,3 +84,6 @@ async function sendMessage() {
   }
 }
 </script>
+
+</body>
+</html>
