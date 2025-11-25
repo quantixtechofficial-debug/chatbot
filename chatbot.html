@@ -64,13 +64,22 @@ async function sendMessage() {
     body: JSON.stringify({ message: message })
   });
 
-      const data = await response.json();
-      
-      if (data.reply) {
-        document.getElementById("reply").innerText = data.reply;
-      } else {
-        document.getElementById("reply").innerText = JSON.stringify(data);
-      }
+      const text = await response.text();
+
+if (!text) {
+  document.getElementById("reply").innerText = "⚠️ El servidor respondió vacío (revisa Respond to Webhook)";
+  return;
+}
+
+let data;
+
+try {
+  data = JSON.parse(text);
+  document.getElementById("reply").innerText = data.reply || data.output || data.message || text;
+} catch (e) {
+  document.getElementById("reply").innerText = text;
+}
+
 
 
   } catch (error) {
@@ -82,4 +91,5 @@ async function sendMessage() {
 
 </body>
 </html>
+
 
