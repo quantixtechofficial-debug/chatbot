@@ -47,7 +47,14 @@
 
 <script>
 async function sendMessage() {
-  const message = document.getElementById("msg").value;
+  const message = document.getElementById("msg").value.trim();
+
+  if (!message) {
+    document.getElementById("reply").innerText = "Escribe un mensaje 🙂";
+    return;
+  }
+
+  document.getElementById("reply").innerText = "Escribiendo...";
 
   try {
     const response = await fetch("https://freecake.app.n8n.cloud/webhook/chatbot-soporte", {
@@ -55,28 +62,36 @@ async function sendMessage() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ message: message })
+      body: JSON.stringify({ message })
     });
 
-    const text = await response.text();
-    console.log("Respuesta cruda:", text);
+    if (!response.ok) {
+      throw new Error("Servidor respondió con error: " + response.status);
+    }
 
+    const text = await response.text();
+
+    // Evita error si n8n responde vacío
     if (!text) {
-      throw new Error("Respuesta vacía del servidor");
+      document.getElementById("reply").innerText = "Respuesta vacía del servidor.";
+      return;
     }
 
     const data = JSON.parse(text);
-    document.getElementById("reply").innerText = data.reply;
+
+    document.getElementById("reply").innerText =
+      data.reply || data.response || "Sin respuesta del bot.";
 
   } catch (error) {
     console.error("Error en chatbot:", error);
-    document.getElementById("reply").innerText = "⚠️ Error del servidor";
+    document.getElementById("reply").innerText = "Error al conectar 😢";
   }
 }
 </script>
 
 </body>
 </html>
+
 
 
 
