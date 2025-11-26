@@ -122,15 +122,24 @@ async function sendMessage() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ message })
-    });
+      body: JSON.stringify({ 
+  message,
+  session: "usuario1"
+});
 
     const data = await response.json();
-    addMessage(data.response || "Sin respuesta del bot", "bot");
+    addMessage(
+  data.response && data.response.trim() !== "" 
+    ? data.response 
+    : "🤖 El bot no respondió, intenta de nuevo",
+  "bot"
+);
+
 
   } catch (error) {
-    addMessage("❌ Error de conexión con el servidor", "bot");
-  }
+  console.error(error);
+  addMessage("⚠️ El bot tardó demasiado o falló el servidor", "bot");
+}
 }
 
 function addMessage(text, type) {
@@ -142,6 +151,7 @@ function addMessage(text, type) {
   messages.scrollTop = messages.scrollHeight;
 }
 </script>
+
 
 
 
