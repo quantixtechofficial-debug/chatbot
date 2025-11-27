@@ -1,163 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Soporte Quantix</title>
+
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
 <style>
-#chatbot-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #4f46e5;
-  color: white;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+.n8n-chat-launcher {
+  background: #007bff !important;
+  border-radius: 50% !important;
 }
 
-#chatbot-box {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 320px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-}
-
-#chatbot-header {
-  background: #4f46e5;
-  color: white;
-  padding: 10px;
-  text-align: center;
+.n8n-chat-header {
+  background: #007bff !important;
+  color: white !important;
   font-weight: bold;
 }
-
-#chatbot-messages {
-  padding: 10px;
-  height: 260px;
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-.user-msg {
-  text-align: right;
-  margin: 5px 0;
-}
-
-.bot-msg {
-  text-align: left;
-  margin: 5px 0;
-}
-
-.user-msg span {
-  background: #4f46e5;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
-}
-
-.bot-msg span {
-  background: #e5e7eb;
-  padding: 6px 10px;
-  border-radius: 10px;
-  display: inline-block;
-}
-
-#chatbot-input {
-  display: flex;
-  border-top: 1px solid #ddd;
-}
-
-#chatbot-input input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  outline: none;
-}
-
-#chatbot-input button {
-  background: #4f46e5;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-}
 </style>
+</head>
+<body>
 
-<button id="chatbot-toggle">💬</button>
+<script type="module">
+import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-<div id="chatbot-box">
-  <div id="chatbot-header">Soporte Quantix 🤖</div>
-  <div id="chatbot-messages"></div>
-  <div id="chatbot-input">
-    <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
-    <button onclick="sendMessage()">Enviar</button>
-  </div>
-</div>
-
-<script>
-const toggle = document.getElementById("chatbot-toggle");
-const box = document.getElementById("chatbot-box");
-
-toggle.onclick = () => {
-  box.style.display = box.style.display === "flex" ? "none" : "flex";
-};
-
-async function sendMessage() {
-  const input = document.getElementById("chatInput");
-  const message = input.value.trim();
-  if (!message) return;
-
-  addMessage(message, "user");
-  input.value = "";
-
-  try {
-    const response = await fetch("https://freecake.app.n8n.cloud/webhook/chatbot-soporte", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ 
-        message: message,
-        session: "usuario1"
-      })
-    });
-
-    const data = await response.json();
-
-    addMessage(
-      data.response && data.response.trim() !== "" 
-        ? data.response 
-        : "🤖 El bot no respondió, intenta de nuevo",
-      "bot"
-    );
-
-  } catch (error) {
-    console.error(error);
-    addMessage("⚠️ El bot tardó demasiado o falló el servidor", "bot");
+createChat({
+  webhookUrl: 'https://freecake.app.n8n.cloud/webhook/a1814ed4-b5bb-4e3a-a6df-2bacbf37002f/chat',
+  mode: 'window',
+  showWelcomeScreen: true,
+  initialMessages: [
+    '👋 Hola, soy el soporte de Quantix',
+    '¿En qué puedo ayudarte?'
+  ],
+  i18n: {
+    es: {
+      title: 'Soporte Quantix',
+      subtitle: 'Asistencia en línea'
+    }
   }
-}
-
-function addMessage(text, type) {
-  const messages = document.getElementById("chatbot-messages");
-  const div = document.createElement("div");
-  div.className = type + "-msg";
-  div.innerHTML = `<span>${text}</span>`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-}
+});
 </script>
 
-
-
-
-
-
-
-
-
+</body>
+</html>
